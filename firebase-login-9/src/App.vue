@@ -9,8 +9,8 @@
     <!-- 로그인 상태 -->
     <nav v-else>
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">로그아웃</router-link> |
-      <router-link to="/about">회원탈퇴</router-link>
+      <a @click="fnDoLogout">로그아웃</a> |
+      <a @click="fnDoDelete">회원탈퇴</a>
     </nav>
 
     <router-view/>
@@ -22,6 +22,16 @@ export default {
   computed: {
     fnGetAuthStatus() {
       return this.$store.getters.fnGetAuthStatus;
+    }
+  },
+  methods: {
+    fnDoLogout() {
+      this.$store.dispatch('fnDoLogout', {
+      })
+    },
+    fnDoDelete() {
+      this.$store.dispatch('fnDoDelete', {
+      })
     }
   }
 }

@@ -12,13 +12,13 @@ import {
   signInWithEmailAndPassword,
   /* 구글 회원 */
   GoogleAuthProvider, 
-  signInWithPopup
-} from 'firebase/auth';
+  signInWithPopup,
+  signOut,
+  deleteUser
+} from 'firebase/auth'; //firebase에 있는 인증 객체를 추가
 
 /* 파이어베이스 인증을 위한 객체 */
 const auth = getAuth();
-
-
 
 Vue.use(Vuex)
 
@@ -36,6 +36,7 @@ export default new Vuex.Store({
 
     /* 사용자 객체의 유무로 로그인 여부 판단 */
     fnGetAuthStatus(state) {
+      //true, false로 구분
       return state.oUser != null;
     }
   },
@@ -99,7 +100,31 @@ export default new Vuex.Store({
       .catch((err) => {
         console.log(err.message);
       })
-    }
+    },
+
+    /* 로그아웃 */
+    fnDoLogout({commit}) {
+      signOut(auth);
+      //가져올 값이 없으므로 null
+      commit('fnSetUser', null);
+      router.push('/');
+    },
+
+    /* 회원 탈퇴 */
+    fnDoDelete({commit}) {
+      //현재 유저의 정보를 불러온다
+      const user = auth.currentUser;
+      deleteUser(user)
+      .then(() => {
+        commit('fnSetUser', null);
+        router.push('/')
+      })
+      .catch((err) => {
+        console.log(err.message);
+      })
+    },
+
+
   },
   modules: {
   }
